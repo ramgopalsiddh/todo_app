@@ -4,8 +4,8 @@
   <!-- Form fields -->
   <%= form.text_field :title, name: "task[title]", placeholder: "Title of todo" %>
   <%= form.text_field :description, name: "task[description]", placeholder: "Description of todo" %>
-  <%= form.date_field :due_date, name: "task[due_date]" %>
-  <%= form.hidden_field :completed, value: false, name: "task[completed]" %>
+  <%= form.datetime_field :due_date, name: "task[due_date]" %>
+  <% form.check_box :completed %>
   <%= form.submit "Save" %>
 <% end %>    
 <%= link_to "Back to home", tasks_path %>

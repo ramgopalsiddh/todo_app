@@ -5,9 +5,15 @@
                         id: task.id,
                         action: "tasks#toggle"
                       } %>
-    <%= task.title %>
-    <%= task.description %>
-    <%= task.due_date %>
+    <% if task.due_date < Date.today %> <!-- Check if due date is in the past -->
+      <span style="color: red;"><%= task.title %></span> <!-- Apply red color to title -->
+      <span style="color: red;"><%= task.description %></span> <!-- Apply red color to description -->
+      <span style="color: red;"><%= task.due_date %></span> <!-- Apply red color to description -->
+    <% else %>
+      <%= task.title %>
+      <%= task.description %>
+      <%= task.due_date %>
+    <% end %>
     <%= link_to "Edit", edit_task_path(task)%>
     <button data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
   <% end %>
