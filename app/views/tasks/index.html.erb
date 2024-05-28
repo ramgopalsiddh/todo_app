@@ -1,0 +1,12 @@
+<h1> Todo App </h1>
+
+
+<%= render "form", task: @task%>
+
+
+<div id="tasks" data-controller="tasks">
+    <h1>Tasks</h1>
+    <div>
+        <%= render @tasks %>
+    </div>
+</div>
