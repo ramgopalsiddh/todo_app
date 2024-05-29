@@ -7,6 +7,7 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "custom", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -15,8 +16,8 @@
     <%= render 'layouts/navbar' %>
   <div class="container">
 
-    <!-- show Messages and Alert -->
-    <%= render 'layouts/messages' %>
+    <%# <!-- show Messages and Alert -->
+    <%= render 'layouts/messages' %> 
 
     <%= yield %>
   </div>

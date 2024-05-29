@@ -1,25 +1,24 @@
 <turbo-frame id="<%= dom_id task %>">
   <div class="mb-3">
     <%= form_with(model: task, class: "d-flex align-items-center justify-content-between") do |form| %>
-      <div class="d-flex align-items-center">
+      <div class="align-items-center">
         <div class="form-check me-2">
         </div>
         <div>
           <% if task.due_date < Date.today %>
             <div class="text-danger me-2">
-                <%= form.check_box :completed, class: "form-check-input", data: { id: task.id, action: "tasks#toggle" } %>
-                <strong><%= task.title %></strong>
+                <%= form.check_box :completed, class: "form-check-input custom-checkbox", data: { id: task.id, action: "tasks#toggle" } %>
+                <%=content_tag :strong, task.title, class: "custom-title" %>
             </div>
-            <div class="text-danger me-2"><%= task.description %></div>
+            <div class="text-danger me-2" ><%= task.description %></div>
             <div class="text-danger">
                 <%= task.due_date %>
-                <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1" %>
+                <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1 ms-3" %>
                 <button type="button" class="btn btn-danger btn-sm" data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
             </div>
           <% else %>
-
             <div class="me-2">
-                <%= form.check_box :completed, class: "form-check-input", data: { id: task.id, action: "tasks#toggle" } %>
+                <%= form.check_box :completed, class: "form-check-input custom-checkbox", data: { id: task.id, action: "tasks#toggle" } %>
                 <strong><%= task.title %></strong>
             </div>
             <div class="me-2"><%= task.description %></div>
