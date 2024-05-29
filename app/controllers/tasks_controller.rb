@@ -2,7 +2,7 @@ class TasksController < ApplicationController
     before_action :set_task, only: [:show, :edit, :update, :destroy]
   
     def index
-      @tasks = Task.order(:due_date)
+      @tasks = Task.all
       @task = Task.new
     end
   
@@ -14,30 +14,36 @@ class TasksController < ApplicationController
     end
   
     def create
-      @task = Task.new(task_params)
-  
-      if @task.save
-        redirect_to tasks_path
-        flash[:notice] = 'Task was successfully created.'
-      else
-        render :new, status: :unprocessable_entity
-      end
+        @task = Task.new(task_params)
+    
+        respond_to do |format|
+          if @task.save
+            format.turbo_stream { render turbo_stream: turbo_stream.append('tasks', partial: 'tasks/task', locals: { task: @task }) }
+          else
+            format.html { render :new }
+            format.turbo_stream { render turbo_stream: turbo_stream.replace('new_task', partial: 'tasks/form', locals: { task: @task }) }
+          end
+        end
     end
 
     def edit
     end
   
     def update
-      if @task.update(task_params)
-        flash[:notice] = "Task was updated sucessfully"
-        redirect_to tasks_path
-      else
-        render :edit
+        @task = Task.find(params[:id])
+        if @task.update(task_params)
+          respond_to do |format|
+            format.turbo_stream { render turbo_stream: turbo_stream.replace(@task) }
+          end
+        else
+          respond_to do |format|
+            format.turbo_stream { render turbo_stream: turbo_stream.replace(@task, partial: 'tasks/form', locals: { task: @task }) }
+          end
+        end
       end
-    end
+      
 
     def destroy
-        @task = Task.find(params[:id])
         @task.destroy
         respond_to do |format|
           format.html { redirect_to tasks_url }
