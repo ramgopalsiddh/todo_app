@@ -4,5 +4,5 @@
   <%= form.text_field :description, name: "task[description]", placeholder: "Description of todo" %>
   <%= form.datetime_field :due_date, name: "task[due_date]" %>
   <%= form.hidden_field :completed, value: false, name: "task[completed]" %>
-  <%= form.submit "Save" %>
+  <%= form.submit "Save", class: "btn btn-primary btn-sm ms-1" %>
 <% end %>

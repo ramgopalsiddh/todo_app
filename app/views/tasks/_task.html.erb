@@ -1,20 +1,37 @@
-<div>
-  <%= form_with(model: task ) do |form| %>
-    <%= form.check_box :completed,
-                      data: {
-                        id: task.id,
-                        action: "tasks#toggle"
-                      } %>
-    <% if task.due_date < Date.today %> <!-- Check if due date is in the past -->
-      <span style="color: red;"><%= task.title %></span> <!-- Apply red color to title -->
-      <span style="color: red;"><%= task.description %></span> <!-- Apply red color to description -->
-      <span style="color: red;"><%= task.due_date %></span> <!-- Apply red color to description -->
-    <% else %>
-      <%= task.title %>
-      <%= task.description %>
-      <%= task.due_date %>
+<turbo-frame id="<%= dom_id task %>">
+  <div class="mb-3">
+    <%= form_with(model: task, class: "d-flex align-items-center justify-content-between") do |form| %>
+      <div class="d-flex align-items-center">
+        <div class="form-check me-2">
+        </div>
+        <div>
+          <% if task.due_date < Date.today %>
+            <div class="text-danger me-2">
+                <%= form.check_box :completed, class: "form-check-input", data: { id: task.id, action: "tasks#toggle" } %>
+                <strong><%= task.title %></strong>
+            </div>
+            <div class="text-danger me-2"><%= task.description %></div>
+            <div class="text-danger">
+                <%= task.due_date %>
+                <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1" %>
+                <button type="button" class="btn btn-danger btn-sm" data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
+            </div>
+          <% else %>
+
+            <div class="me-2">
+                <%= form.check_box :completed, class: "form-check-input", data: { id: task.id, action: "tasks#toggle" } %>
+                <strong><%= task.title %></strong>
+            </div>
+            <div class="me-2"><%= task.description %></div>
+            <div>
+                <%= task.due_date %>
+                <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1 ms-3" %>
+                <button type="button" class="btn btn-danger btn-sm" data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
+            </div>
+          <% end %>
+        </div>
+    
+    </div>
     <% end %>
-    <%= link_to "Edit", edit_task_path(task)%>
-    <button data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
-  <% end %>
-</div>
+  </div>
+</turbo-frame>
