@@ -1,22 +1,29 @@
-<h1 class="mb-4">Editing Task</h1>
-
 <turbo-frame id="<%= dom_id @task %>">
-  <%= form_with(model: @task, local: true, class: "needs-validation", novalidate: true) do |form| %>
-    <!-- Form fields -->
-    <div class="mb-3" style="max-width: 400px;">
-      <% form.check_box :completed, class: "form-check-input", id: "task_completed" %>
-      <%= form.text_field :title, name: "task[title]", class: "form-control", placeholder: "Title of todo", required: true %>
-    </div>
-    <div class="mb-3" style="max-width: 400px;">
-      <%= form.text_field :description, name: "task[description]", class: "form-control", placeholder: "Description of todo", required: true %>
-    </div>
-    <div class="mb-3" style="max-width: 400px;">
-      <%= form.datetime_field :due_date, name: "task[due_date]", class: "form-control", placeholder: "Due date", required: true %>
-    </div>
+  <div class="row mt-2">
+    <div class="col-md-6" >
+      <div class="card ">
+        <div class="card-body">
 
-    <div class="d-flex" style="max-width: 400px;">
-      <%= form.submit "Save", class: "btn btn-primary me-2" %>
-      <%= link_to "Cancel", tasks_path, class: "btn btn-secondary" %>
+          <%= form_with(model: @task, local: true, class: "needs-validation", novalidate: true) do |form| %>
+            <!-- Form fields -->
+            <div class="mb-3">
+            <% form.check_box :completed, class: "form-check-input", id: "task_completed" %>
+            <%= form.text_field :title, name: "task[title]", class: "form-control", placeholder: "Title of todo", required: true %>
+            </div>
+            <div class="mb-3">
+            <%= form.text_field :description, name: "task[description]", class: "form-control", placeholder: "Description of todo", required: true %>
+            </div>
+            <div class="mb-3">
+            <%= form.datetime_field :due_date, name: "task[due_date]", class: "form-control", placeholder: "Due date", required: true %>
+            </div>
+
+            <div class="d-flex">
+            <%= form.submit "Save", class: "btn btn-primary me-2" %>
+            <%= link_to "Cancel", tasks_path, class: "btn btn-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-  <% end %>
+  </div>
 </turbo-frame>
