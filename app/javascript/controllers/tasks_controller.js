@@ -24,22 +24,25 @@ export default class extends Controller {
         
     }
 
-    delete(e) {
-      const id = e.target.dataset.id;
-      const csrfToken = document.querySelector("[name='csrf-token']").content;
-  
-      fetch(`/tasks/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-Token': csrfToken
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            const taskId = response.headers.get("Turbo-Frame");
-            const frame = document.getElementById(taskId);
-            frame.remove();
-          }
-        });
+  async delete(e) {
+    e.preventDefault();
+    const id = e.target.dataset.id;
+    const csrfToken = document.querySelector("[name='csrf-token']").content;
+
+    const response = await fetch(`/tasks/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-Token': csrfToken,
+        'Accept': 'text/vnd.turbo-stream.html'
+      }
+    });
+
+    if (response.ok) {
+      const taskId = `task_${id}`;
+      const frame = document.getElementById(taskId);
+      if (frame) {
+        frame.remove();
+      }
     }
+  }
 }
