@@ -8,35 +8,39 @@ class TasksController < ApplicationController
   
     def show
     end
-  
-    def new
-      @task = Task.new
-    end
-  
+
     def create
         @task = Task.new(task_params)
-    
+        
         respond_to do |format|
           if @task.save
-            format.turbo_stream { render turbo_stream: turbo_stream.append('tasks', partial: 'tasks/task', locals: { task: @task }) }
+            format.turbo_stream do
+              render turbo_stream: [
+                turbo_stream.append('tasks', partial: 'tasks/task', locals: { task: @task }),
+                turbo_stream.replace('new_task', partial: 'tasks/form', locals: { task: Task.new })
+              ]
+            end
+            format.html { redirect_to tasks_path, notice: 'Task was successfully created.' }
           else
+            format.turbo_stream do
+              render turbo_stream: turbo_stream.replace('new_task', partial: 'tasks/form', locals: { task: @task })
+            end
             format.html { render :new }
-            format.turbo_stream { render turbo_stream: turbo_stream.replace('new_task', partial: 'tasks/form', locals: { task: @task }) }
           end
         end
-    end
+      end
+    
 
-    def edit
-    end
-  
     def update
         @task = Task.find(params[:id])
         if @task.update(task_params)
           respond_to do |format|
+            format.html
             format.turbo_stream { render turbo_stream: turbo_stream.replace(@task) }
           end
         else
           respond_to do |format|
+            format.html
             format.turbo_stream { render turbo_stream: turbo_stream.replace(@task, partial: 'tasks/form', locals: { task: @task }) }
           end
         end
