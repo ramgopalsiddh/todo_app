@@ -23,14 +23,23 @@ function updateDateTime() {
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const seconds = now.getSeconds().toString().padStart(2, '0');
 
-    const currentTimeString = `${hours}:${minutes}:${seconds},`;
-    const currentDateString = `${dayOfWeek}, ${month} ${date}, ${year}`;
+    const currentTimeString = `${hours}:${minutes}:${seconds}`;
+    const currentDateString = `${dayOfWeek}, ${month} ${date}, ${year},`;
     
-    document.getElementById('currentDateTime').textContent = `${currentTimeString} ${currentDateString}`;
+    document.getElementById('currentDateTime').textContent = `${currentDateString} ${currentTimeString}`;
   }
   
   // Update the date and time immediately
   updateDateTime();
   
   // Update the date and time every second
-  setInterval(updateDateTime, 100);
+  setInterval(updateDateTime, 10);
+  
+// JS for reset for content after press save button of form
+document.addEventListener('turbo:submit-end', function (event) {
+  console.log('Form submission completed'); // Debugging statement
+  const form = document.getElementById('new_task_form');
+  if (form) {
+    form.reset();
+  }
+});
