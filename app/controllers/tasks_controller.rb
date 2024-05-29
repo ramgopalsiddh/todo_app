@@ -17,7 +17,8 @@ class TasksController < ApplicationController
       @task = Task.new(task_params)
   
       if @task.save
-        redirect_to tasks_path, notice: 'Task was successfully created.'
+        redirect_to tasks_path
+        flash[:notice] = 'Task was successfully created.'
       else
         render :new, status: :unprocessable_entity
       end
@@ -28,16 +29,21 @@ class TasksController < ApplicationController
   
     def update
       if @task.update(task_params)
-        redirect_to tasks_path, notice: 'Task was successfully updated.'
+        flash[:notice] = "Task was updated sucessfully"
+        redirect_to tasks_path
       else
         render :edit
       end
     end
 
     def destroy
-      @task.destroy
-      redirect_to tasks_url, notice: 'Task was successfully destroyed.'
-    end
+        @task = Task.find(params[:id])
+        @task.destroy
+        respond_to do |format|
+          format.html { redirect_to tasks_url }
+          format.turbo_stream # Render turbo-stream response
+        end
+      end
 
     def toggle
         @task = Task.find(params[:id])
@@ -50,7 +56,6 @@ class TasksController < ApplicationController
 
     def set_task
       @task = Task.find(params[:id])
-      redirect_to tasks_path, alert: 'Task not found' unless @task
     end
   
     def task_params

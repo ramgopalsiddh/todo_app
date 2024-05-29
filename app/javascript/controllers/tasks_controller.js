@@ -24,8 +24,8 @@ export default class extends Controller {
         
     }
 
-    delete(event) {
-      const id = event.target.dataset.id;
+    delete(e) {
+      const id = e.target.dataset.id;
       const csrfToken = document.querySelector("[name='csrf-token']").content;
   
       fetch(`/tasks/${id}`, {
