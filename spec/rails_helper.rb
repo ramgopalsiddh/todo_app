@@ -90,4 +90,6 @@ RSpec.configure do |config|
     # Rspec Output Format: Documentation(show test details in log)
     config.formatter = :documentation
 
+    config.include Devise::Test::ControllerHelpers, type: :controller
+
 end

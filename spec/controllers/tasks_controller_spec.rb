@@ -1,11 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
-  render_views  # Ensure views are rendered
 
-  let!(:task) { create(:task, title: 'Test Task', description: 'This is a test task', due_date: '2024-12-31') }
-  let(:valid_attributes) { { title: 'Test Task', description: 'This is a test task', due_date: '2024-12-31', completed: false } }
-  let(:invalid_attributes) { { title: '', description: '', due_date: '', completed: nil } }
+  include Devise::Test::ControllerHelpers
+  
+  before do
+    @user = FactoryBot.create(:user, confirmed_at: Time.now)
+    sign_in @user
+  end
+
+  render_views 
+
+  let(:valid_attributes) { { title: 'Test Task', description: 'This is a test task', due_date: '2024-12-31', completed: false, user_id: @user.id } }
+  let(:invalid_attributes) { { title: '', description: '', due_date: '', completed: nil, user_id: @user.id } }
+  let!(:task) { FactoryBot.create(:task, user: @user, title: 'Test Task', description: 'This is a test task', due_date: '2024-12-31', completed: false) }
 
   describe "GET #index" do
     it "returns a success response" do
@@ -14,7 +22,6 @@ RSpec.describe TasksController, type: :controller do
       expect(assigns(:tasks)).to eq([task])
     end
   end
-
 
   describe "GET #edit" do
     it "returns a success response" do
@@ -75,7 +82,7 @@ RSpec.describe TasksController, type: :controller do
       end
 
       it "responds successfully with turbo stream" do
-        put :update, params: { id: task.id, task: valid_attributes }, format: :turbo_stream
+        put :update, params: { id: task.id, task: new_attributes }, format: :turbo_stream
         expect(response).to have_http_status(:ok)
       end
     end
@@ -87,7 +94,6 @@ RSpec.describe TasksController, type: :controller do
         expect(task.title).not_to eq('')
       end
     end
-
   end
 
   describe "DELETE #destroy" do
@@ -104,20 +110,36 @@ RSpec.describe TasksController, type: :controller do
 
     it "returns a turbo stream response" do
       delete :destroy, params: { id: task.id }, format: :turbo_stream
-      expect(response.media_type).to eq Mime[:turbo_stream]
+      expect(response.media_type).to eq Mime[:turbo_stream].to_s
     end
   end
 
   describe "PATCH #toggle" do
-    it "toggles the task's completion status" do
-      patch :toggle, params: { id: task.id, completed: true }
-      task.reload
-      expect(task.completed).to be_truthy
+    let(:user) { create(:user) }
+    let(:task) { create(:task, user: user) }
+
+    context "when toggling the task's completion status to true" do
+      it "renders Turbo Stream response and toggles the completion status" do
+        patch :toggle, params: { id: task.id, completed: true }, format: :turbo_stream
+        expect(response).to have_http_status(:success)
+        expect(task.reload.completed).to eq(true)
+      end
     end
 
-    it "returns a success message" do
-      patch :toggle, params: { id: task.id, completed: true }
-      expect(response.body).to include("Success")
+    context "when toggling the task's completion status to false" do
+      it "renders Turbo Stream response and toggles the completion status" do
+        patch :toggle, params: { id: task.id, completed: false }, format: :turbo_stream
+        expect(response).to have_http_status(:success)
+        expect(task.reload.completed).to eq(false)
+      end
+    end
+
+    context "when responding with a success message" do
+      it "renders a success message as JSON" do
+        patch :toggle, params: { id: task.id, completed: true }, format: :json
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)["message"]).to eq("Success")
+      end
     end
   end
 end
