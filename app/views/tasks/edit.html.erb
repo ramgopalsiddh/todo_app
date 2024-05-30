@@ -11,7 +11,7 @@
             <%= form.text_field :title, name: "task[title]", class: "form-control", placeholder: "Title of todo", required: true %>
             </div>
             <div class="mb-3">
-            <%= form.text_field :description, name: "task[description]", class: "form-control", placeholder: "Description of todo", required: true %>
+            <%= form.text_area :description, name: "task[description]", class: "form-control", placeholder: "Description of todo", required: true %>
             </div>
             <div class="mb-3">
             <%= form.datetime_field :due_date, name: "task[due_date]", class: "form-control", placeholder: "Due date", required: true %>

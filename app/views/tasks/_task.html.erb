@@ -19,9 +19,9 @@
               <% else %>
                 <div class="me-2">
                     <%= form.check_box :completed, class: "form-check-input custom-checkbox", data: { id: task.id, action: "tasks#toggle" } %>
-                    <strong><%= task.title %></strong>
+                    <%=content_tag :strong, task.title, class: "custom-title" %>
                 </div>
-                <div class="me-2"><%= task.description %></div>
+                <div class="me-2 card-text"><%= task.description %></div>
                 <div>
                     <%= task.due_date %>
                     <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1 ms-3" %>
