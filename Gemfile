@@ -33,6 +33,15 @@ gem 'jquery-rails'
 
 gem 'dartsass-sprockets'
 
+# devise for authentication (https://github.com/heartcombo/devise)
+gem 'devise'
+
+# Use i18n because (https://github.com/hisea/devise-bootstrap-views/issues/55)
+gem 'devise-i18n' 
+
+# Add devise view with bootstrap (https://github.com/hisea/devise-bootstrap-views)
+gem 'devise-bootstrap-views', '~> 1.0'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
