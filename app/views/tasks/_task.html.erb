@@ -1,37 +1,39 @@
 <turbo-frame id="<%= dom_id(task) %>">
-  <div class="row mt-2">
-    <div class="col-md-6">
-      <div class="card ">
-        <%= form_with(model: task, class: "card-body d-flex align-items-center justify-content-between") do |form| %>
-          <div class="align-items-center">
-            <div>
-              <% if task.due_date < Date.today %>
-                <div class="text-danger me-2">
-                    <%= form.check_box :completed, class: "form-check-input custom-checkbox", data: { id: task.id, action: "tasks#toggle" } %>
-                    <%=content_tag :strong, task.title, class: "custom-title" %>
-                </div>
-                <div class="text-danger me-2 card-text" ><%= task.description %></div>
-                <div class="text-danger">
-                    <%= task.due_date %>
-                    <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1 ms-3" %>
-                    <button type="button" class="btn btn-danger btn-sm" data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
-                </div>
-              <% else %>
-                <div class="me-2">
-                    <%= form.check_box :completed, class: "form-check-input custom-checkbox", data: { id: task.id, action: "tasks#toggle" } %>
-                    <%=content_tag :strong, task.title, class: "custom-title" %>
-                </div>
-                <div class="me-2 card-text"><%= task.description %></div>
-                <div>
-                    <%= task.due_date %>
-                    <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1 ms-3" %>
-                    <button type="button" class="btn btn-danger btn-sm" data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
-                </div>
-              <% end %>
+  <% if task.user_id == current_user.id %>
+    <div class="row mt-2">
+      <div class="col-md-6">
+        <div class="card ">
+          <%= form_with(model: task, class: "card-body d-flex align-items-center justify-content-between") do |form| %>
+            <div class="align-items-center">
+              <div>
+                <% if task.due_date < Date.today %>
+                  <div class="text-danger me-2">
+                      <%= form.check_box :completed, class: "form-check-input custom-checkbox", data: { id: task.id, action: "tasks#toggle" } %>
+                      <%=content_tag :strong, task.title, class: "custom-title" %>
+                  </div>
+                  <div class="text-danger me-2 card-text" ><%= task.description %></div>
+                  <div class="text-danger">
+                      <%= task.due_date %>
+                      <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1 ms-3" %>
+                      <button type="button" class="btn btn-danger btn-sm" data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
+                  </div>
+                <% else %>
+                  <div class="me-2">
+                      <%= form.check_box :completed, class: "form-check-input custom-checkbox", data: { id: task.id, action: "tasks#toggle" } %>
+                      <%=content_tag :strong, task.title, class: "custom-title" %>
+                  </div>
+                  <div class="me-2 card-text"><%= task.description %></div>
+                  <div>
+                      <%= task.due_date %>
+                      <%= link_to "Edit", edit_task_path(task), class: "btn btn-primary btn-sm me-1 ms-3" %>
+                      <button type="button" class="btn btn-danger btn-sm" data-action="click->tasks#delete" data-id="<%= task.id %>">Delete</button>
+                  </div>
+                <% end %>
+              </div>
             </div>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
 </turbo-frame>
