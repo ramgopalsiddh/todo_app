@@ -5,24 +5,35 @@ export default class extends Controller {
     console.log(this.element)
   }
     
-    toggle(e) {
-        const id = e.target.dataset.id
-        const csrfToken = document.querySelector("[name='csrf-token']").content
+  toggle(e) {
+    const id = e.target.dataset.id
+    const csrfToken = document.querySelector("[name='csrf-token']").content
 
-        fetch(`/tasks/${id}/toggle`, {
-            method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': csrfToken
-            },
-            body: JSON.stringify({ completed: e.target.checked })
-        })
-            .then(response => response.json())
-        
-    }
+    fetch(`/tasks/${id}/toggle`, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      body: JSON.stringify({ completed: e.target.checked })
+    })
+      .then(response => {
+      // this is refrsh a specific turbo frame after toggle executed
+    if (response.ok) {
+      response.text().then(function(stream) {
+        const frameId = `task_${id}`;
+        const frame = document.getElementById(frameId);
+          if (frame) {
+            frame.innerHTML = stream;
+          }
+        });
+      }
+    });
+  }
+
 
   async delete(e) {
     e.preventDefault();

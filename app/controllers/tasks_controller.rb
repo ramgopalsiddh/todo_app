@@ -1,4 +1,5 @@
 class TasksController < ApplicationController
+    include ActionView::RecordIdentifier
     before_action :set_task, only: [:show, :edit, :update, :destroy]
   
     def index
@@ -59,11 +60,21 @@ class TasksController < ApplicationController
     def toggle
         @task = Task.find(params[:id])
         @task.update(completed: params[:completed])
-    
-        render json: { message: "Success" }
-      end
+      
+        # Respond with a Turbo Stream targeting the specific frame
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(task_frame_id(@task), partial: "tasks/task", locals: { task: @task })
+          end
+          format.json { render json: { message: "Success" } }
+        end
+    end
 
     private
+
+    def task_frame_id(task)
+      "task_#{task.id}"
+    end
 
     def set_task
       @task = Task.find(params[:id])
