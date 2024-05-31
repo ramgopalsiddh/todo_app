@@ -32,11 +32,12 @@
     <div class="row mt-2">
       <div class="col-md-4">
         <div class="form-group">
-          <%= form.datetime_field :due_date, name: "task[due_date]", class: "form-control" %>
+          <%= form.label :due_date, "Due Date", class: "form-label" %>
+          <%= form.datetime_field :due_date, name: "task[due_date]", class: "form-control custom" %>
         </div>
       </div>
       <div class="col-md-2">
-        <%= form.submit "Create Task !!!", class: "btn btn-primary" %>
+        <%= form.submit "Create Task !!!", class: "btn btn-primary custom-mt" %>
       </div>
     </div>
   <% end %>
